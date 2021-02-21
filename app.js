@@ -107,6 +107,6 @@ function renderResults(event) {
     for (let i = 0; i < ChooseFavImage.imagesArr.length; i++) {
         imagesResult = document.createElement("li");
         resultList.appendChild(imagesResult);
-        imagesResult.textContent = ChooseFavImage.imagesArr[i].name + " had" + ChooseFavImage.imagesArr[i].votes + " votes," + " and was seen" + ChooseFavImage.imagesArr[i].shownNO + " times.";
+        imagesResult.textContent = ChooseFavImage.imagesArr[i].name + " : had " + ChooseFavImage.imagesArr[i].votes + " votes," + " and was seen " + ChooseFavImage.imagesArr[i].shownNO + " times.";
     }
 }
