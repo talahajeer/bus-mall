@@ -55,10 +55,10 @@ ul li{
     height: 50px;
 }
 body main p{
-    width: 70%;
-    margin-left: 350px;
+    width: 90%;
+    margin-left: 70px;
     text-align: center;
-    margin-top: 250px;
+    margin-top: 70px;
 }
 body footer{
     background-color: rgb(78, 76, 76);

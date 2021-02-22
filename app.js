@@ -10,6 +10,9 @@ let leftImageIndex = 0;
 let middleImageIndex = 0;
 let rightImageIndex = 0;
 let shownNO = 0;
+let imagesNames = [];
+let votesArr = [];
+let shownNoArr = [];
 
 let leftImageElement = document.getElementById("left-image");
 let middleImageElement = document.getElementById("middle-image");
@@ -22,6 +25,7 @@ function ChooseFavImage(name, source) {
     this.votes = 0;
     this.shownNO = shownNO;
     ChooseFavImage.imagesArr.push(this);
+    imagesNames.push(name);
 }
 ChooseFavImage.imagesArr = [];
 
@@ -92,15 +96,42 @@ function handleUserClick(event) {
         }
         renderThreeImages();
     } else {
-       let clickButton = document.getElementById("view-results");
+        let clickButton = document.getElementById("view-results");
         clickButton.addEventListener('click', renderResults);
-        
+        clickButton.addEventListener('click', renderChart);
+
         leftImageElement.removeEventListener('click', handleUserClick);
         middleImageElement.removeEventListener('click', handleUserClick);
         rightImageElement.removeEventListener('click', handleUserClick);
+
+        for (let i = 0; i < ChooseFavImage.imagesArr.length; i++) {
+            votesArr.push(ChooseFavImage.imagesArr[i].votes);
+            shownNoArr.push(ChooseFavImage.imagesArr[i].shownNO);
+        }
     }
 }
+function renderChart(event) {
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: imagesNames,
+            datasets: [{
+                label: 'Images Votes',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: votesArr,
+            },
+            {
+                label: 'Images Shown',
+                backgroundColor: 'black',
+                borderColor: 'balck',
+                data: shownNoArr,
+            }]
+        },
+    })
 
+}
 function renderResults(event) {
     let resultList = document.getElementById("result-list");
     let imagesResult;
