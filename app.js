@@ -13,6 +13,7 @@ let shownNO = 0;
 let imagesNames = [];
 let votesArr = [];
 let shownNoArr = [];
+let indexes = [];
 
 let leftImageElement = document.getElementById("left-image");
 let middleImageElement = document.getElementById("middle-image");
@@ -57,25 +58,37 @@ function generateRandomIndex() {
 }
 
 function renderThreeImages() {
-    leftImageIndex = generateRandomIndex();
-    ChooseFavImage.imagesArr[leftImageIndex].shownNO++;
 
     do {
-        middleImageIndex = generateRandomIndex();
-        ChooseFavImage.imagesArr[middleImageIndex].shownNO++;
-    } while (leftImageIndex === middleImageIndex)
+        leftImageIndex = generateRandomIndex();
+        ChooseFavImage.imagesArr[leftImageIndex].shownNO++;
 
-    do {
-        rightImageIndex = generateRandomIndex();
-        ChooseFavImage.imagesArr[rightImageIndex].shownNO++;
-    } while (leftImageIndex === rightImageIndex || middleImageIndex === rightImageIndex)
+        do {
+            middleImageIndex = generateRandomIndex();
+            ChooseFavImage.imagesArr[middleImageIndex].shownNO++;
+        } while (leftImageIndex === middleImageIndex)
 
-    leftImageElement.src = ChooseFavImage.imagesArr[leftImageIndex].source;
-    middleImageElement.src = ChooseFavImage.imagesArr[middleImageIndex].source;
-    rightImageElement.src = ChooseFavImage.imagesArr[rightImageIndex].source;
+        do {
+            rightImageIndex = generateRandomIndex();
+            ChooseFavImage.imagesArr[rightImageIndex].shownNO++;
+        } while (leftImageIndex === rightImageIndex || middleImageIndex === rightImageIndex)
+
+        // console.log(indexes);
+
+        leftImageElement.src = ChooseFavImage.imagesArr[leftImageIndex].source;
+        middleImageElement.src = ChooseFavImage.imagesArr[middleImageIndex].source;
+        rightImageElement.src = ChooseFavImage.imagesArr[rightImageIndex].source;
+
+    } while (indexes.includes(leftImageIndex) || indexes.includes(middleImageIndex) || indexes.includes(rightImageIndex))
+
+    indexes = [];
+    indexes.push(leftImageIndex, middleImageIndex, rightImageIndex);
+    console.log(indexes);
+
 
 }
 renderThreeImages();
+
 
 
 leftImageElement.addEventListener('click', handleUserClick);
@@ -95,10 +108,13 @@ function handleUserClick(event) {
             ChooseFavImage.imagesArr[rightImageIndex].votes++;
         }
         renderThreeImages();
+
     } else {
         let clickButton = document.getElementById("view-results");
         clickButton.addEventListener('click', renderResults);
         clickButton.addEventListener('click', renderChart);
+        clickButton.setAttribute("onclick","this.disabled = true");
+
 
         leftImageElement.removeEventListener('click', handleUserClick);
         middleImageElement.removeEventListener('click', handleUserClick);
@@ -110,6 +126,7 @@ function handleUserClick(event) {
         }
     }
 }
+
 function renderChart(event) {
     var ctx = document.getElementById('myChart').getContext('2d');
     var chart = new Chart(ctx, {
