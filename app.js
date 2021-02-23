@@ -61,16 +61,16 @@ function renderThreeImages() {
 
     do {
         leftImageIndex = generateRandomIndex();
-        ChooseFavImage.imagesArr[leftImageIndex].shownNO++;
+        
 
         do {
             middleImageIndex = generateRandomIndex();
-            ChooseFavImage.imagesArr[middleImageIndex].shownNO++;
+           
         } while (leftImageIndex === middleImageIndex)
 
         do {
             rightImageIndex = generateRandomIndex();
-            ChooseFavImage.imagesArr[rightImageIndex].shownNO++;
+            
         } while (leftImageIndex === rightImageIndex || middleImageIndex === rightImageIndex)
 
         // console.log(indexes);
@@ -80,7 +80,9 @@ function renderThreeImages() {
         rightImageElement.src = ChooseFavImage.imagesArr[rightImageIndex].source;
 
     } while (indexes.includes(leftImageIndex) || indexes.includes(middleImageIndex) || indexes.includes(rightImageIndex))
-
+    ChooseFavImage.imagesArr[leftImageIndex].shownNO++;
+    ChooseFavImage.imagesArr[middleImageIndex].shownNO++;
+    ChooseFavImage.imagesArr[rightImageIndex].shownNO++;
     indexes = [];
     indexes.push(leftImageIndex, middleImageIndex, rightImageIndex);
     console.log(indexes);
