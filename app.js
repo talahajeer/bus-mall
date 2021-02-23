@@ -13,6 +13,8 @@ let shownNO = 0;
 let imagesNames = [];
 let votesArr = [];
 let shownNoArr = [];
+let totalVotes = [];
+let totalShown = [];
 let indexes = [];
 
 let leftImageElement = document.getElementById("left-image");
@@ -61,16 +63,16 @@ function renderThreeImages() {
 
     do {
         leftImageIndex = generateRandomIndex();
-        
+
 
         do {
             middleImageIndex = generateRandomIndex();
-           
+
         } while (leftImageIndex === middleImageIndex)
 
         do {
             rightImageIndex = generateRandomIndex();
-            
+
         } while (leftImageIndex === rightImageIndex || middleImageIndex === rightImageIndex)
 
         // console.log(indexes);
@@ -85,12 +87,42 @@ function renderThreeImages() {
     ChooseFavImage.imagesArr[rightImageIndex].shownNO++;
     indexes = [];
     indexes.push(leftImageIndex, middleImageIndex, rightImageIndex);
-    console.log(indexes);
+    // console.log(indexes);
 
 
 }
 renderThreeImages();
 
+function settingItems() {
+    let dataVotes = JSON.stringify(totalVotes);
+    let dataShown = JSON.stringify(shownNoArr);
+
+    localStorage.setItem("Votes in Local", dataVotes);
+    localStorage.setItem("No Of Shown in local", dataShown);
+}
+
+function gettingItems() {
+    let votesFromLocal = localStorage.getItem("Votes in Local");
+    let noOfShownLocal = localStorage.getItem("No Of Shown in local");
+
+    let normalVotesLocal = JSON.parse(votesFromLocal);
+    let normalShownLocal = JSON.parse(noOfShownLocal);
+
+    // console.log(normalVotesLocal);
+    // console.log(normalShownLocal);
+    if (normalVotesLocal !== null) {
+        for (let i = 0; i < ChooseFavImage.imagesArr.length; i++) {
+            totalVotes[i] = totalVotes[i] + normalVotesLocal[i];
+        }
+        // console.log(totalVotes);
+    }
+    if (normalShownLocal !== null) {
+        for (let i = 0; i < ChooseFavImage.imagesArr.length; i++) {
+            totalShown[i] = totalShown[i] + normalShownLocal[i];
+        }
+        // console.log(totalShown);
+    }
+}
 
 
 leftImageElement.addEventListener('click', handleUserClick);
@@ -115,17 +147,25 @@ function handleUserClick(event) {
         let clickButton = document.getElementById("view-results");
         clickButton.addEventListener('click', renderResults);
         clickButton.addEventListener('click', renderChart);
-        clickButton.setAttribute("onclick","this.disabled = true");
-
-
+        clickButton.setAttribute("onclick", "this.disabled = true");
+        
+        
         leftImageElement.removeEventListener('click', handleUserClick);
         middleImageElement.removeEventListener('click', handleUserClick);
         rightImageElement.removeEventListener('click', handleUserClick);
-
+        
         for (let i = 0; i < ChooseFavImage.imagesArr.length; i++) {
             votesArr.push(ChooseFavImage.imagesArr[i].votes);
             shownNoArr.push(ChooseFavImage.imagesArr[i].shownNO);
         }
+        totalVotes = votesArr;
+        totalShown = shownNoArr;
+        gettingItems();
+        settingItems();
+        console.log(totalVotes);
+        console.log(totalVotes);
+
+        
     }
 }
 
@@ -139,13 +179,13 @@ function renderChart(event) {
                 label: 'Images Votes',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
-                data: votesArr,
+                data: totalVotes,
             },
             {
                 label: 'Images Shown',
                 backgroundColor: 'black',
                 borderColor: 'balck',
-                data: shownNoArr,
+                data: totalShown,
             }]
         },
     })
@@ -157,6 +197,8 @@ function renderResults(event) {
     for (let i = 0; i < ChooseFavImage.imagesArr.length; i++) {
         imagesResult = document.createElement("li");
         resultList.appendChild(imagesResult);
-        imagesResult.textContent = ChooseFavImage.imagesArr[i].name + " : had " + ChooseFavImage.imagesArr[i].votes + " votes," + " and was seen " + ChooseFavImage.imagesArr[i].shownNO + " times.";
+        // imagesResult.textContent = ChooseFavImage.imagesArr[i].name + " : had " + ChooseFavImage.imagesArr[i].votes + " votes," + " and was seen " + ChooseFavImage.imagesArr[i].shownNO + " times.";
+        imagesResult.textContent = ChooseFavImage.imagesArr[i].name + " : had " + totalVotes[i] + " votes," + " and was seen " + totalShown[i] + " times.";
+    
     }
 }
